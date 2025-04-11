@@ -81,6 +81,7 @@ function Campaigns() {
       await campaignService.deleteCampaign(selectedCampaign._id);
       setCampaigns(campaigns.filter(c => c._id !== selectedCampaign._id));
       setShowDeleteModal(false);
+      setError(null);
     } catch (err) {
       setError('Failed to delete campaign. Please try again later.');
       console.error('Error deleting campaign:', err);
@@ -94,7 +95,8 @@ function Campaigns() {
       const result = await campaignService.duplicateCampaign(campaign._id);
       setCampaigns([result.data, ...campaigns]);
       setDuplicating(false);
-    } catch (err) {
+    } 
+    catch (err) {
       setError('Failed to duplicate campaign. Please try again later.');
       console.error('Error duplicating campaign:', err);
       setDuplicating(false);
