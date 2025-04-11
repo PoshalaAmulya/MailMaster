@@ -192,7 +192,7 @@ ${mainContent.split('\n\n').map(paragraph => {
             </Row>
 
             <Form.Group className="mb-3">
-              <Form.Label className="campaign-label">Key Points (Optional)</Form.Label>
+              <Form.Label className="campaign-label">Key Points </Form.Label>
               <Form.Control
                 as="textarea"
                 name="keyPoints"
