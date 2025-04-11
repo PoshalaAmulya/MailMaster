@@ -87,21 +87,43 @@ function Campaigns() {
       console.error('Error deleting campaign:', err);
     }
   };
-
   const handleDuplicateCampaign = async (campaign) => {
-    try {
-      setDuplicating(true);
-      setError(null);
-      const result = await campaignService.duplicateCampaign(campaign._id);
-      setCampaigns([result.data, ...campaigns]);
-      setDuplicating(false);
-    } 
-    catch (err) {
-      setError('Failed to duplicate campaign. Please try again later.');
-      console.error('Error duplicating campaign:', err);
-      setDuplicating(false);
+  setDuplicating(true);
+  setError(null);
+
+  try {
+    const result = await campaignService.duplicateCampaign(campaign._id);
+
+    // Safety check in case result or result.data is undefined
+    if (!result || !result.data) {
+      throw new Error('No data returned from duplicateCampaign');
     }
-  };
+
+    // Prepend the duplicated campaign to the list
+    setCampaigns(prev => [result.data, ...prev]);
+  } catch (err) {
+    console.error('Error duplicating campaign:', err);
+    setError('Failed to duplicate campaign. Please try again later.');
+  } finally {
+    setDuplicating(false);
+  }
+};
+
+
+  // const handleDuplicateCampaign = async (campaign) => {
+  //   try {
+  //     setDuplicating(true);
+  //     setError(null);
+  //     const result = await campaignService.duplicateCampaign(campaign._id);
+  //     setCampaigns([result.data, ...campaigns]);
+  //     setDuplicating(false);
+  //   } 
+  //   catch (err) {
+  //     setError('Failed to duplicate campaign. Please try again later.');
+  //     console.error('Error duplicating campaign:', err);
+  //     setDuplicating(false);
+  //   }
+  // };
 
   const filteredCampaigns = campaigns.filter(campaign => {
     const matchesSearch = campaign.name.toLowerCase().includes(searchTerm.toLowerCase());
