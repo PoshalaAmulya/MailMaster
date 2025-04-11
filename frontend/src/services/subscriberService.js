@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/subscribers';
+const API_URL = 'https://mailmaster-ts0b.onrender.com/api/subscribers';
 
 // Get token from localStorage
 const getToken = () => {
