@@ -87,27 +87,27 @@ function Campaigns() {
       console.error('Error deleting campaign:', err);
     }
   };
-  const handleDuplicateCampaign = async (campaign) => {
-  setDuplicating(true);
-  setError(null);
+//   const handleDuplicateCampaign = async (campaign) => {
+//   setDuplicating(true);
+//   setError(null);
 
-  try {
-    const result = await campaignService.duplicateCampaign(campaign._id);
+//   try {
+//     const result = await campaignService.duplicateCampaign(campaign._id);
 
-    // Safety check in case result or result.data is undefined
-    if (!result || !result.data) {
-      throw new Error('No data returned from duplicateCampaign');
-    }
+//     // Safety check in case result or result.data is undefined
+//     if (!result || !result.data) {
+//       throw new Error('No data returned from duplicateCampaign');
+//     }
 
-    // Prepend the duplicated campaign to the list
-    setCampaigns(prev => [result.data, ...prev]);
-  } catch (err) {
-    console.error('Error duplicating campaign:', err);
-    setError('Failed to duplicate campaign. Please try again later.');
-  } finally {
-    setDuplicating(false);
-  }
-};
+//     // Prepend the duplicated campaign to the list
+//     setCampaigns(prev => [result.data, ...prev]);
+//   } catch (err) {
+//     console.error('Error duplicating campaign:', err);
+//     setError('Failed to duplicate campaign. Please try again later.');
+//   } finally {
+//     setDuplicating(false);
+//   }
+// };
 
 
   // const handleDuplicateCampaign = async (campaign) => {
@@ -308,7 +308,7 @@ function Campaigns() {
                         onClick={() => handleDuplicateCampaign(campaign)}
                         disabled={duplicating}
                       >
-                        <FontAwesomeIcon icon={faCopy} />
+{/*                         <FontAwesomeIcon icon={faCopy} /> */}
                       </Button>
                       <Button 
                         variant="light" 
