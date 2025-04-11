@@ -1,4 +1,3 @@
-// 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -9,21 +8,28 @@ dotenv.config();
 
 const app = express();
 
+// Allowed origins for CORS
+const allowedOrigins = [
+    'https://mail-master-two.vercel.app',
+    'http://localhost:3000'
+];
+
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
-  };
-  app.use(cors(corsOptions));
-  app.options('*', cors(corsOptions));
+};
+
 // Enable CORS
-// app.use(cors({
-//   origin: process.env.NODE_ENV === 'production' 
-//     ? process.env.FRONTEND_URL 
-//     : 'http://localhost:3000',
-//   credentials: true
-// }));
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // Body parser
 app.use(express.json());
@@ -34,7 +40,7 @@ app.use((req, res, next) => {
     console.log('Request details:');
     console.log(`Method: ${req.method}`);
     console.log(`Path: ${req.path}`);
-    console.log(`Headers:`, req.headers);
+    console.log('Headers:', req.headers);
     console.log('--------------------');
     next();
 });
@@ -50,7 +56,7 @@ if (!process.env.MONGO_URI) {
     process.exit(1);
 }
 
-// Root route - Define this before MongoDB connection
+// Root route
 app.get('/', (req, res) => {
     res.json({
         success: true,
@@ -64,59 +70,51 @@ app.get('/', (req, res) => {
     });
 });
 
-// Test route - Define this before MongoDB connection
+// Test route
 app.get('/api/test', (req, res) => {
     res.json({ success: true, message: 'API is working' });
 });
 
-// Connect to MongoDB and initialize routes
+// Initialize MongoDB connection and server
 const initializeServer = async () => {
     try {
-        // Connect to MongoDB
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
         console.log('MongoDB Connected');
 
-        // Mount routes with logging
         console.log('\nLoading routes...');
-
-        // Import all routes first
         const campaignRoutes = require('./routes/campaigns');
         const authRoutes = require('./routes/auth');
         const subscriberRoutes = require('./routes/subscribers');
         const contentRoutes = require('./routes/content');
 
-        // Add a test route to verify Express is working
         app.get('/api/health', (req, res) => {
             res.json({ status: 'ok', message: 'Server is running' });
         });
 
-        // Mount routes in order
         console.log('\nMounting routes...');
-        
-        // Mount content routes first
         app.use('/api/content', contentRoutes);
         console.log('Mounted content routes at /api/content');
-        
+
         app.use('/api/auth', authRoutes);
         console.log('Mounted auth routes at /api/auth');
-        
+
         app.use('/api/campaigns', campaignRoutes);
         console.log('Mounted campaign routes at /api/campaigns');
-        
+
         app.use('/api/subscribers', subscriberRoutes);
         console.log('Mounted subscriber routes at /api/subscribers');
 
-        // Add route debugging middleware after mounting routes
+        // Route debugging
         app.use((req, res, next) => {
             console.log(`[DEBUG] Incoming request: ${req.method} ${req.path}`);
             console.log('Available routes:', app._router.stack.map(r => r.regexp && r.regexp.source).filter(Boolean));
             next();
         });
 
-        // 404 handler should be last
+        // 404 handler
         app.use((req, res) => {
             console.log(`404 - Not Found: ${req.method} ${req.path}`);
             console.log('Request headers:', req.headers);
@@ -128,7 +126,7 @@ const initializeServer = async () => {
             });
         });
 
-        // Error handler middleware
+        // Global error handler
         app.use((err, req, res, next) => {
             console.error('Global error:', err.stack);
             res.status(500).json({
@@ -138,7 +136,6 @@ const initializeServer = async () => {
             });
         });
 
-        // Start server
         const PORT = process.env.PORT || 5000;
         const server = app.listen(PORT, () => {
             console.log(`\nServer running on port ${PORT}`);
@@ -151,7 +148,6 @@ const initializeServer = async () => {
             console.log(`GET http://localhost:${PORT}/api/campaigns/subscribers/active`);
         });
 
-        // Handle server errors
         server.on('error', (error) => {
             if (error.code === 'EADDRINUSE') {
                 console.error(`Port ${PORT} is already in use. Please try a different port.`);
@@ -167,7 +163,7 @@ const initializeServer = async () => {
     }
 };
 
-// Initialize server
+// Start the server
 initializeServer().catch(error => {
     console.error('Server initialization failed:', error);
     process.exit(1);
