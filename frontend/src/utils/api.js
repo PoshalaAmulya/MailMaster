@@ -116,7 +116,7 @@
 //     });
 // }; 
  
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://mailmaster-ts0b.onrender.com/api';
 
 export const apiCall = async (endpoint, options = {}) => {
     try {
