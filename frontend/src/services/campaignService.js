@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = 'https://mailmaster-ts0b.onrender.com/api';
 const API_URL = `${BASE_URL}/campaigns`;
 
 // Get token from localStorage
