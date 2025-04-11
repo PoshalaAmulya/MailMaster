@@ -302,14 +302,14 @@ function Campaigns() {
                       >
                         <FontAwesomeIcon icon={faEdit} />
                       </Button>
-                      <Button 
+{/*                       <Button 
                         variant="light" 
                         className="me-2"
                         onClick={() => handleDuplicateCampaign(campaign)}
                         disabled={duplicating}
                       >
-{/*                         <FontAwesomeIcon icon={faCopy} /> */}
-                      </Button>
+                        <FontAwesomeIcon icon={faCopy} />
+                      </Button> */}
                       <Button 
                         variant="light" 
                         className="text-danger"
