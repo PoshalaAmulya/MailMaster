@@ -47,7 +47,7 @@ function Register() {
       window.dispatchEvent(new Event('authChange'));
 
       // Redirect to login page after successful registration
-      navigate('/login');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.message);
     } finally {
