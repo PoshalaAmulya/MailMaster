@@ -55,11 +55,11 @@ const CreateCampaign = () => {
         const content = response.generated_content;
         
         // Extract the main content without subject and signature
-        const mainContent = content
-          .replace(/^Subject:.*\n/, '')
-          .replace(/\nSincerely,.*$/, '')
-          .replace(/Dear Valued Customer,?\s*/i, '') // Remove duplicate greeting
-          .trim();
+        // const mainContent = content
+        //   .replace(/^Subject:.*\n/, '')
+        //   .replace(/\nSincerely,.*$/, '')
+        //   .replace(/Dear Valued Customer,?\s*/i, '') // Remove duplicate greeting
+        //   .trim();
 
         // Format the content with HTML styling
         const formattedContent = `
